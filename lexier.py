@@ -1,13 +1,10 @@
-
-from genericpath import exists
-from tempfile import TemporaryFile
 import scl_scanner
-
 
 lexemeList = []
 lexeme = ''
 nextToken = ''
 nextChar = ''
+
 #Character classes
 LETTER = 0
 DIGIT = 1
@@ -27,15 +24,15 @@ RIGHT_PAREN = 26
 
 operatorTable = [ '=', '*', '/', '(', ')', '[]', '<=', '>=', ':']
 
+#remove comments using scanner and run
 def parsefilename():
     global nextToken
     file = scl_scanner.cleanup()
     
-    #getChar()
+    #iterate though file lexeme by lexeme
     for nextToken in file:
         lex()
-    # while nextToken != EOF:
-    #         lex()
+
     
 #Token function to look up operator and parentheses and return the token
 def lookup(ch):
@@ -60,27 +57,41 @@ def lookup(ch):
         nextToken = DIV_OP #24
     elif ch == '=':
         addChar()
-        nextToken = ASSIGN_OP #24
+        nextToken = ASSIGN_OP #20
     else:
         addChar()
         nextToken = "EOF"
     return nextToken
 
+#add characters to make full lexemes
 def addChar():
     global lexeme
     global index
     global nextToken
-    #adr a character if it is shorter than 98 characters
+
+    #if the lexeme is only a single character declare it without iterating
     if len(nextToken) == 1:
         lexeme = nextToken
         return True
+
+    #checking to see if the lexeme is too long
     if len(lexeme) <= 98:
+
+        #add current character
         lexeme += nextToken[index]
+
+        #test to stop when lexeme is finished
         try:
             test = nextToken[index+1]
+        
+        #return true when lexeme is finished
         except IndexError:
             return True
+
+        #iterate through lexeme
         index += 1
+
+        #retun false to show the lexeme is not complete
         return False
         # lexLen=+1
         # lexeme[lexLen] = nextChar
@@ -95,52 +106,52 @@ def lex():
     global index
     lexeme = ''
     index = 0
+
     #check if character is in operator table
     if nextToken in operatorTable:
         nextToken = lookup(nextToken)
-        #getChar()
-    
+        
     #check to see if is identifier
-    try:
-        if isinstance(nextToken[index], str):
+    elif type(nextToken[index]) == str:
+        try:
+            intCheck = float(nextToken)
+        except(ValueError):
             addChar()
-            while isinstance(nextToken[index], str) or isinstance(nextToken[index], str):
+            while type(nextToken[index]) == str or type(nextToken[index]) == int:
                 if addChar(): break
-
             nextToken = IDENT
-    except(ValueError):
-        #final check to see if it is an int
-        if isinstance(nextToken[index], int, float):
-            addChar()
-            #getChar()
-            while isinstance(nextToken[index], int) and boundsCheck(nextToken, index):
+        else:
+        #final check to see if it is an int or float
+            if type(nextToken == int or float):
                 addChar()
-                #getChar()
-            if nextToken[index] == '.':
-                addChar()
-                #float check
-                while isinstance(nextToken[index], int) and boundsCheck(nextToken, index):
-                    index += 1
-                    addChar()
-                nextToken = FLOAT
-            nextToken = INT_LIT
+                
+                #keep adding ints to make full number
+                while type(nextToken[index] == int or float):
+                    if addChar(): break
+                
+                #if there is a decmal declare it as float
+                if '.' in nextToken:
+                    nextToken = FLOAT
+                
+                else:
+                    nextToken = INT_LIT
 
+    #if it does not pass any send EOF maybe change !!!!!!!!
     else:
         lexeme = 'EOF'
 
+    #add lexeme to list of lexemes
     lexemeList.append(lexeme)
+
+    #output token and lexeme
     print("Next token is: " + str(nextToken) + ", Next lexeme is " + lexeme)
     return nextToken
 
-def boundsCheck(next, index):
-    try:
-        next[index+1]
-    except IndexError:
-        return True
-    return False
-parsefilename()
+# parsefilename()
+
+
 #
-# def #getChar():
+# def :
 #     if nextChar != 'EOF':
 #         if isalpha(nextChar):
 #             charClass = LETTER
