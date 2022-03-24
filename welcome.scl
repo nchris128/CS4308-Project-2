@@ -1,12 +1,12 @@
 
-import "scl.h"
+import scl.h
 implementations
 function main return type integer is
 variables
     define x of type double
 begin
-    display "Welcome to the world of SCL"
+    display "Welcome"
     set x = 45.95
-    display "Value of x: ", x
+    display "Value", x
     exit
 endfun main
