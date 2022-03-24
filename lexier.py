@@ -4,7 +4,7 @@ from tempfile import TemporaryFile
 import scl_scanner
 
 
-
+lexemeList = []
 lexeme = ''
 nextToken = ''
 nextChar = ''
@@ -58,6 +58,9 @@ def lookup(ch):
     elif ch == '/':
         addChar()
         nextToken = DIV_OP #24
+    elif ch == '=':
+        addChar()
+        nextToken = ASSIGN_OP #24
     else:
         addChar()
         nextToken = "EOF"
@@ -69,9 +72,13 @@ def addChar(nextChar):
     global nextToken
     #adr a character if it is shorter than 98 characters
     if len(lexeme) <= 98:
-        lexeme += nextChar
+        lexeme += nextToken[index]
+        try:
+            test = nextToken[index+1]
+        except IndexError:
+            return True
         index += 1
-
+        return False
         # lexLen=+1
         # lexeme[lexLen] = nextChar
         # lexeme[lexLen] = 0
@@ -83,6 +90,7 @@ def lex():
     global lexeme
     global nextToken
     global index
+    lexeme = ''
     lexLen = 0
     index = 0
     #check if character is in operator table
@@ -96,8 +104,8 @@ def lex():
         addChar(nextToken[index])
         #getChar()
         while isinstance(nextToken[index], str) or isinstance(nextToken[index], str):
-            addChar(nextToken[index])
-            if boundsCheck(nextToken, index): break
+            if addChar(nextToken[index]): break
+            #if boundsCheck(nextToken, index): break
             
             #getChar()
         nextToken = IDENT
@@ -124,6 +132,7 @@ def lex():
         lexeme[2] = 'F'
         lexeme[3] = 0
 
+    lexemeList.append(lexeme)
     print("Next token is: " + str(nextToken) + ", Next lexeme is " + lexeme)
     return nextToken
 
