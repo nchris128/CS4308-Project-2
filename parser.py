@@ -94,7 +94,7 @@ peek = index + 1
 for i in full_list:
     lexNum = lookup(full_list[index])
     lex = full_list[index]
-    print("Next token is: " + lexNum + " Next word is: " + lex)
+    print("Next token is: " + lexNum + " Next word is: " + lex + " \n")
     keywords(full_list[index], full_list[peek])
     identifier(full_list[index], full_list[peek])
     operators(full_list[index], full_list[peek])
