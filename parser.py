@@ -21,7 +21,7 @@ def lookup(lexeme):
     if lexeme in keywordsCheck:
         return "0"
     elif lexeme in identifiersCheck:
-        if lexeme == "43.95":
+        if isinstance(lexeme, float) == True:
             return "1"
         else:
             return "0"
@@ -80,6 +80,7 @@ def operators(text, nextword):
     else:
         print('<RETURNING IDENTIFIERS>')
         return
+        
 def syntaxError():
     print('SYNTAX ERROR')
 
