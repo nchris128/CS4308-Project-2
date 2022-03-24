@@ -22,22 +22,22 @@ def lookup(lexeme):
         return "0"
     elif lexeme in identifiersCheck:
         if lexeme == "43.95":
-            return 1
+            return "1"
         else:
-            0
+            return "0"
     elif lexeme in operatorsCheck:
         if lexeme == "+":
-            return 21
+            return "21"
         elif lexeme == "-":
-            return 22
+            return "22"
         elif lexeme == "*":
-            return 23
+            return "23"
         elif lexeme == "/":
-            return 24
+            return "24"
         elif lexeme == "=":
-            return 10
+            return "10"
     else:
-        return 99
+        return "99"
 
 #keyword function
 def keywords(text, nextword):
@@ -53,9 +53,9 @@ def keywords(text, nextword):
         return
 
 #get identifier
-def identifier(text,nextword):
+def identifier(text, nextword):
     print("<ENTERING IDENTIFIERS>")
-    if text in identifier:
+    if text in identifiersCheck:
         if nextword in operatorsCheck:
             print('<RETURNING IDENTIFIERS>')
             return
