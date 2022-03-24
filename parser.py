@@ -14,7 +14,7 @@ def compiler(filename):
     f = file.read()
 
     cleantext = f.split()
-    print(cleantext)
+    # print(cleantext)
     return cleantext
 
 def lookup(lexeme):
@@ -92,8 +92,9 @@ index = 0
 peek = index + 1
 
 for i in full_list:
-
-    print("Next token is: " + lookup(full_list[i+1]) + " Next word is: " + full_list[i])
+    lexNum = lookup(full_list[index])
+    lex = full_list[index]
+    print("Next token is: " + lexNum + " Next word is: " + lex)
     keywords(full_list[index], full_list[peek])
     identifier(full_list[index], full_list[peek])
     operators(full_list[index], full_list[peek])
