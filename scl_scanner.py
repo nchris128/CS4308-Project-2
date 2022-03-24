@@ -1,17 +1,20 @@
 #removing comments and unnecessary symbols
+from lib2to3.pytree import convert
+
+
 def cleanup():
     strippedText = ''
     cleanedText = ''
-
+    convertedText = []
     #characters to remove from code
-    toStrip = ',.":'
+    # toStrip = ',.":'
 
     #replacing each instance of the character with spaces
-    for toStrip in toStrip:
-        strippedText = scl.replace(toStrip, ' ')
+    # for toStrip in toStrip:
+    #     strippedText = scl.replace(toStrip, ' ')
 
     #split the code into a list of lines
-    lineText =  strippedText.splitlines()
+    lineText =  scl.splitlines()
     descriptionIndex = 0
     lineText = [i.lstrip() for i in lineText]
 
@@ -39,7 +42,17 @@ def cleanup():
         else:
             cleanedText = cleanedText + line + '\n'
     cleanedText = cleanedText.split()
-    return(cleanedText)
+
+    for each in cleanedText:
+
+        try:
+            convertedText.append(int(each))
+        except(ValueError):
+            try:
+                convertedText.append(float(each))
+            except(ValueError):
+                convertedText.append(each)
+    return(convertedText)
 
 def keywordScanner():
     #table for keywords to compare to the scl file
@@ -100,5 +113,6 @@ cleanedSCL = cleanup()
 keywordScanner()
 identifierScanner()
 operatorScanner()
+print(cleanup())
 
 

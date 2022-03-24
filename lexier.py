@@ -66,11 +66,14 @@ def lookup(ch):
         nextToken = "EOF"
     return nextToken
 
-def addChar(nextChar):
+def addChar():
     global lexeme
     global index
     global nextToken
     #adr a character if it is shorter than 98 characters
+    if len(nextToken) == 1:
+        lexeme = nextToken
+        return True
     if len(lexeme) <= 98:
         lexeme += nextToken[index]
         try:
@@ -91,46 +94,39 @@ def lex():
     global nextToken
     global index
     lexeme = ''
-    lexLen = 0
     index = 0
     #check if character is in operator table
     if nextToken in operatorTable:
         nextToken = lookup(nextToken)
         #getChar()
-        
-
+    
     #check to see if is identifier
-    if isinstance(nextToken[index], str):
-        addChar(nextToken[index])
-        #getChar()
-        while isinstance(nextToken[index], str) or isinstance(nextToken[index], str):
-            if addChar(nextToken[index]): break
-            #if boundsCheck(nextToken, index): break
-            
-            #getChar()
-        nextToken = IDENT
+    try:
+        if isinstance(nextToken[index], str):
+            addChar()
+            while isinstance(nextToken[index], str) or isinstance(nextToken[index], str):
+                if addChar(): break
 
-    #final check to see if it is an int
-    elif isinstance(nextToken[index], int):
-        addChar(nextToken[index])
-        #getChar()
-        while isinstance(nextToken[index], int) and boundsCheck(nextToken, index):
-            addChar(nextToken[index])
+            nextToken = IDENT
+    except(ValueError):
+        #final check to see if it is an int
+        if isinstance(nextToken[index], int, float):
+            addChar()
             #getChar()
-        if nextToken[index] == '.':
-            addChar(nextToken[index])
-            #float check
             while isinstance(nextToken[index], int) and boundsCheck(nextToken, index):
-                index += 1
-                addChar(nextToken[index])
-            nextToken = FLOAT
-        nextToken = INT_LIT
+                addChar()
+                #getChar()
+            if nextToken[index] == '.':
+                addChar()
+                #float check
+                while isinstance(nextToken[index], int) and boundsCheck(nextToken, index):
+                    index += 1
+                    addChar()
+                nextToken = FLOAT
+            nextToken = INT_LIT
 
     else:
-        lexeme[0] = 'E'
-        lexeme[1] = 'O'
-        lexeme[2] = 'F'
-        lexeme[3] = 0
+        lexeme = 'EOF'
 
     lexemeList.append(lexeme)
     print("Next token is: " + str(nextToken) + ", Next lexeme is " + lexeme)
