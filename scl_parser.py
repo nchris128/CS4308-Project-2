@@ -8,6 +8,7 @@ import os
 keywordsCheck = scl_scanner.keywordScanner()
 operatorsCheck = ['=', '*', '/', '('')', '[]', '<=', ":"]
 identifiersCheck = scl_scanner.identifierScanner()
+identifierDuplicate = []
 fileName = ''
 
 def compiler():
@@ -19,6 +20,7 @@ def compiler():
 def keywords(text, nextword):
     print("<ENTERING KEYWORDS>")
     if text in keywordsCheck:
+        
         if nextword or "EOF" in identifiersCheck:
             print("<RETUNRING KEYWORDS>")
             return
@@ -31,6 +33,7 @@ def keywords(text, nextword):
 #get identifier
 def identifier(text, nextword):
     print("<ENTERING IDENTIFIERS>")
+    identifierExists(text, nextword)
     if text in identifiersCheck:
         if nextword or "EOF" in operatorsCheck:
             print('<RETURNING IDENTIFIERS>')
@@ -43,6 +46,13 @@ def identifier(text, nextword):
     else:
         print('<RETURNING IDENTIFIERS>')
         return
+
+#check for identifier duplications
+def identifierExists(text, id):
+    if text == 'define':
+            identifierDuplicate.append(id)
+            if id in identifierDuplicate:
+                print('SYNTAX ERROR!')
 
  # get operators
 def operators(text, nextword):
