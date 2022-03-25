@@ -1,11 +1,10 @@
+import re
 #removing comments and unnecessary symbols
-from lib2to3.pytree import convert
+cleanedSCL = []
 
-
-def cleanup():
-    strippedText = ''
+def cleanup(scl):
+    global cleanedSCL
     cleanedText = ''
-    convertedText = []
     #characters to remove from code
     # toStrip = ',.":'
 
@@ -14,7 +13,11 @@ def cleanup():
     #     strippedText = scl.replace(toStrip, ' ')
 
     #split the code into a list of lines
-    lineText =  scl.splitlines()
+
+    space = re.compile(r"([()])")
+    spaceText = space.sub(' \\1 ', scl)
+
+    lineText =  spaceText.splitlines()
     descriptionIndex = 0
     lineText = [i.lstrip() for i in lineText]
 
@@ -41,20 +44,15 @@ def cleanup():
 
         else:
             cleanedText = cleanedText + line + '\n'
-    cleanedText = cleanedText.split()
+    
+    cleanedSCL = cleanedText.split()
+    
 
-    for each in cleanedText:
+    return(cleanedSCL)
 
-        try:
-            convertedText.append(int(each))
-        except(ValueError):
-            try:
-                convertedText.append(float(each))
-            except(ValueError):
-                convertedText.append(each)
-    return(convertedText)
 
 def keywordScanner():
+    # global keywordList
     #table for keywords to compare to the scl file
     keywordTable =['import', 'begin', 'call','using', 'endfun', 'set', 'exit',
                  'symbol', 'forward', 'function', 'parameters', 'array', 'integer',
@@ -69,12 +67,10 @@ def keywordScanner():
         if i in keywordTable:
             keywordList.append(i)
 
-    print('\nKeywords Found:')
-    print(keywordList)
-    print('Keywords Total: ' + str(len(keywordList)))
+    return(keywordList)
  
 def identifierScanner():
-    
+    # global identifiterList
     #iterates through scl looking for identifiers being defined then adding to new list
     idx = 0
     identifiterList = []
@@ -83,11 +79,10 @@ def identifierScanner():
         if i == 'define':
             identifiterList.append(cleanedSCL[idx])
 
-    print('\nIdentifiers Found:')
-    print(identifiterList)
-    print('Identifier Total: ' + str(len(identifiterList)))    
+    return(identifiterList)
 
 def operatorScanner():
+    # global operatorList
     #iterates through scl to find operators and add it to new list
     operatorTable = [ '=', '*', '/', '(', ')', '[]', '<=', '>=', ':']
     operatorList = []
@@ -95,24 +90,43 @@ def operatorScanner():
         if i in operatorTable:
             operatorList.append(i)
 
+    return(operatorList)
+
+def displayKeywords():
+    keywordList = keywordScanner()
+    print('\nKeywords Found:')
+    print(keywordList)
+    print('Keywords Total: ' + str(len(keywordList)))  
+
+def displayOperators():
+    operatorList = operatorScanner()
     print('\nOperators Found:')
     print(operatorList)
-    print('Operator Total: ' + str(len(operatorList)))
+    print('Operators Total: ' + str(len(operatorList)))  
 
-def read():
+def displayIdentifiers():
+    identifiterList = identifierScanner()
+    print('\nIdentifiers Found:')
+    print(identifiterList)
+    print('Identifiers Total: ' + str(len(identifiterList)))  
+
+def read(fileName):
     # print('Please enter the name for the scl file to scan\nExample: arduino_ex1.scl')
     # file = input()
-    file = 'welcome.scl'
-    openedFile = open(file)
-    scl = openedFile.read()
-    return(scl)
-#user enters scl location to scan then is opened to read
+    file = fileName
+    try:
+        openedFile = open(file)
+        scl = openedFile.read()
+        return scl
+    except(FileNotFoundError, UnboundLocalError):
+        print("Please select a file first")
 
-scl = read()
-cleanedSCL = cleanup()
-keywordScanner()
-identifierScanner()
-operatorScanner()
-print(cleanup())
+    
+#user enters scl location to scan then is opened to read
+# scl = read(Menu.chooseFile())
+# keywordScanner()
+# identifierScanner()
+# operatorScanner()
+# print(cleanup())
 
 

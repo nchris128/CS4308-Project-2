@@ -38,39 +38,39 @@ def parsefilename():
 def lookup(ch):
     global nextToken
     if ch == '(':
-        addChar()
+        addChar(ch)
         nextToken = LEFT_PAREN #25
     elif ch == ')':
-        addChar()
+        addChar(ch)
         nextToken = RIGHT_PAREN #26
     elif ch == '+':
-        addChar()
+        addChar(ch)
         nextToken = ADD_OP #21
     elif ch == '-':
-        addChar()
+        addChar(ch)
         nextToken = SUB_OP #22
     elif ch == '*':
-        addChar()
+        addChar(ch)
         nextToken = MULT_OP #23
     elif ch == '/':
-        addChar()
+        addChar(ch)
         nextToken = DIV_OP #24
     elif ch == '=':
-        addChar()
+        addChar(ch)
         nextToken = ASSIGN_OP #20
     else:
-        addChar()
+        addChar(ch)
         nextToken = "EOF"
     return nextToken
 
 #add characters to make full lexemes
-def addChar():
+def addChar(nextToken):
     global lexeme
     global index
-    global nextToken
+    
 
     #if the lexeme is only a single character declare it without iterating
-    if len(nextToken) == 1:
+    if len(str(nextToken)) == 1:
         lexeme = nextToken
         return True
 
@@ -100,9 +100,9 @@ def addChar():
         print("Error - lexeme is too long")
 
 #main lexical analyzer function
-def lex():
+def lex(passedLexeme):
     global lexeme
-    global nextToken
+    nextToken = passedLexeme
     global index
     lexeme = ''
     index = 0
@@ -116,18 +116,18 @@ def lex():
         try:
             intCheck = float(nextToken)
         except(ValueError):
-            addChar()
+            addChar(nextToken)
             while type(nextToken[index]) == str or type(nextToken[index]) == int:
-                if addChar(): break
+                if addChar(nextToken): break
             nextToken = IDENT
         else:
         #final check to see if it is an int or float
             if type(nextToken == int or float):
-                addChar()
+                addChar(nextToken)
                 
                 #keep adding ints to make full number
                 while type(nextToken[index] == int or float):
-                    if addChar(): break
+                    if addChar(nextToken): break
                 
                 #if there is a decmal declare it as float
                 if '.' in nextToken:
@@ -144,8 +144,8 @@ def lex():
     lexemeList.append(lexeme)
 
     #output token and lexeme
-    print("Next token is: " + str(nextToken) + ", Next lexeme is " + lexeme)
-    return nextToken
+    print("\nNext token is: " + str(nextToken) + ", Next lexeme is " + lexeme)
+    return nextToken, lexeme
 
 # parsefilename()
 
